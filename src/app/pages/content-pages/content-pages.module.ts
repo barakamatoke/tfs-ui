@@ -10,7 +10,7 @@ import { ComingSoonPageComponent } from "./coming-soon/coming-soon-page.componen
 import { ErrorPageComponent } from "./error/error-page.component";
 import { ForgotPasswordPageComponent } from "./forgot-password/forgot-password-page.component";
 import { LockScreenPageComponent } from "./lock-screen/lock-screen-page.component";
-import { LoginPageComponent } from "./login/login-page.component";
+import { LoginComponent } from "./login/login.component";
 import { MaintenancePageComponent } from "./maintenance/maintenance-page.component";
 import { RegisterPageComponent } from "./register/register-page.component";
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -42,7 +42,7 @@ export function createTranslateLoader(http: HttpClient) {
     ErrorPageComponent,
     ForgotPasswordPageComponent,
     LockScreenPageComponent,
-    LoginPageComponent,
+    LoginComponent,
     MaintenancePageComponent,
     RegisterPageComponent
   ]

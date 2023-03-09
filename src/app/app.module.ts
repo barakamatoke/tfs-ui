@@ -30,6 +30,7 @@ import { FullLayoutComponent } from "./layouts/full/full-layout.component";
 import { AuthService } from "./shared/auth/auth.service";
 import { AuthGuard } from "./shared/auth/auth-guard.service";
 import { WINDOW_PROVIDERS } from './shared/services/window.service';
+import { TestComponent } from './test/test.component';
 
 var firebaseConfig = {
   apiKey: "AIzaSyC9XfnIpwNoSv7cyAsoccFQ5EYPd7lZXrk", //YOUR_API_KEY
@@ -53,7 +54,7 @@ export function createTranslateLoader(http: HttpClient) {
 }
 
 @NgModule({
-  declarations: [AppComponent, FullLayoutComponent, ContentLayoutComponent],
+  declarations: [AppComponent, FullLayoutComponent, ContentLayoutComponent, TestComponent],
   imports: [
     BrowserAnimationsModule,
     StoreModule.forRoot(fromApp.appReducer),

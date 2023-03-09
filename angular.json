@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "matngular": {
+    "tfs-ui": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -96,18 +96,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "matngular:build"
+            "browserTarget": "tfs-ui:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "matngular:build:production"
+              "browserTarget": "tfs-ui:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "matngular:build"
+            "browserTarget": "tfs-ui:build"
           }
         },
         "test": {
@@ -144,7 +144,7 @@
         }
       }
     },
-    "matngular-e2e": {
+    "tfs-ui-e2e": {
       "root": "",
       "sourceRoot": "",
       "projectType": "application",
@@ -153,12 +153,13 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "matngular:serve"
+            "devServerTarget": "tfs-ui:serve"
           }
         }
       }
     }
   },
+  "defaultProject": "tfs-ui",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

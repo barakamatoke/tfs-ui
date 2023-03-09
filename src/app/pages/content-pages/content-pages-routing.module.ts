@@ -5,7 +5,7 @@ import { ComingSoonPageComponent } from "./coming-soon/coming-soon-page.componen
 import { ErrorPageComponent } from "./error/error-page.component";
 import { ForgotPasswordPageComponent } from "./forgot-password/forgot-password-page.component";
 import { LockScreenPageComponent } from "./lock-screen/lock-screen-page.component";
-import { LoginPageComponent } from "./login/login-page.component";
+import { LoginComponent } from "./login/login.component";
 import { MaintenancePageComponent } from "./maintenance/maintenance-page.component";
 import { RegisterPageComponent } from "./register/register-page.component";
 
@@ -34,18 +34,18 @@ const routes: Routes = [
         data: {
           title: 'Forgot Password Page'
         }
-      },   
-      
+      },
+
       {
         path: 'lockscreen',
         component: LockScreenPageComponent,
         data: {
           title: 'Lock Screen page'
         }
-      },   
+      },
       {
         path: 'login',
-        component: LoginPageComponent,
+        component: LoginComponent,
         data: {
           title: 'Login Page'
         }
@@ -63,8 +63,8 @@ const routes: Routes = [
         data: {
           title: 'Register Page'
         }
-      }   
-      
+      }
+
     ]
   }
 ];

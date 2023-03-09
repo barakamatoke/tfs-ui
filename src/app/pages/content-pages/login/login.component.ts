@@ -7,14 +7,16 @@ import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-login-page',
-  templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.scss']
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 
-export class LoginPageComponent {
+export class LoginComponent {
 
   loginFormSubmitted = false;
   isLoginFailed = false;
+  lat: number;
+  lng: number;
 
   loginForm = new UntypedFormGroup({
     username: new UntypedFormControl('guest@apex.com', [Validators.required]),
@@ -34,6 +36,10 @@ export class LoginPageComponent {
 
   // On submit button click
   onSubmit() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.lat = position.coords.latitude;
+      this.lng = position.coords.longitude;
+    });
     this.loginFormSubmitted = true;
     if (this.loginForm.invalid) {
       return;
@@ -48,17 +54,34 @@ export class LoginPageComponent {
         fullScreen: true
       });
 
-    this.authService.signinUser(this.loginForm.value.username, this.loginForm.value.password)
-      .then((res) => {
-        this.spinner.hide();
+    // this.authService.signinUser(this.loginForm.value.username, this.loginForm.value.password)
+    //   .then((res) => {
+    //     this.spinner.hide();
+    //     this.router.navigate(['/dashboard/dashboard1']);
+    //   })
+    //   .catch((err) => {
+    //     this.isLoginFailed = true;
+    //     this.spinner.hide();
+    //     console.log('error: ' + err)
+    //   }
+    //   );
+
+
+    const userLogin = {
+      username: this.loginForm.value.username,
+      password: this.loginForm.value.password,
+      latitude: 979879879,
+      longitude: 879798789
+    }
+
+    this.authService.login(userLogin).subscribe(res => {
+      this.spinner.hide();
         this.router.navigate(['/dashboard/dashboard1']);
-      })
-      .catch((err) => {
-        this.isLoginFailed = true;
-        this.spinner.hide();
-        console.log('error: ' + err)
-      }
-      );
+    }, error => {
+      this.isLoginFailed = true;
+      this.spinner.hide();
+      console.log('errorsss: ' + error)
+    })
   }
 
 }
