@@ -15,6 +15,7 @@ export class LoginComponent {
 
   loginFormSubmitted = false;
   isLoginFailed = false;
+  loginFailedMessage: string;
   lat: number;
   lng: number;
 
@@ -53,18 +54,6 @@ export class LoginComponent {
         color: '#fff',
         fullScreen: true
       });
-
-    // this.authService.signinUser(this.loginForm.value.username, this.loginForm.value.password)
-    //   .then((res) => {
-    //     this.spinner.hide();
-    //     this.router.navigate(['/dashboard/dashboard1']);
-    //   })
-    //   .catch((err) => {
-    //     this.isLoginFailed = true;
-    //     this.spinner.hide();
-    //     console.log('error: ' + err)
-    //   }
-    //   );
 
 
     const userLogin = {
