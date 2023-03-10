@@ -1,7 +1,5 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from "@angular/fire/auth";
-import firebase from 'firebase/app'
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserAuth } from 'app/pages/full-pages/users/models/user-auth';
 import { tap, catchError, map } from 'rxjs/operators';
@@ -14,8 +12,6 @@ import { User } from 'app/pages/full-pages/users/models/user';
 export class AuthService {
 
   private _securityObject$: BehaviorSubject<UserAuth> = new BehaviorSubject<UserAuth>(null);
-  private user: Observable<firebase.User>;
-  private userDetails: firebase.User = null;
 
   public get securityObject$(): Observable<UserAuth> {
     return this._securityObject$.pipe(
@@ -35,21 +31,9 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    public _firebaseAuth: AngularFireAuth,
     private commonHttpErrorService: CommonHttpErrorService,
     public router: Router
     ) {
-    this.user = _firebaseAuth.authState;
-    this.user.subscribe(
-      (user) => {
-        if (user) {
-          this.userDetails = user;
-        }
-        else {
-          this.userDetails = null;
-        }
-      }
-    );
 
   }
 
@@ -59,7 +43,6 @@ export class AuthService {
 
   signinUser(email: string, password: string) {
     //your code for checking credentials and getting tokens for for signing in user
-    return this._firebaseAuth.signInWithEmailAndPassword(email, password)
 
   }
 
@@ -67,9 +50,10 @@ export class AuthService {
     // Initialize security object
     //this.resetSecurityObject();
     console.log("UserLogin", entity);
-    return this.http.post<UserAuth>(`https://localhost:5001/api/User/login`, entity)
+    return this.http.post<UserAuth>(`api/User/login`, entity)
       .pipe(
         tap((resp) => {
+          console.log("RespFirstName", resp.firstName);
           localStorage.setItem('authObj', JSON.stringify(resp));
           localStorage.setItem('bearerToken', resp.bearerToken);
           this._securityObject$.next(resp);
@@ -89,7 +73,7 @@ export class AuthService {
   }
 
   changePassword(user: any): Observable<User | CommonError> {
-    const url = `https://localhost:5001/api/user/changepassword`;
+    const url = `api/user/changepassword`;
     return this.http.post<User>(url, user)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
@@ -103,6 +87,6 @@ export class AuthService {
   }
 
   currentUser(): any {
-    return localStorage.getItem('authObj');
+    return JSON.parse(localStorage.getItem('authObj'));
   }
 }

@@ -59,25 +59,7 @@
     </div>
     <div class="navbar-container">
       <div class="collapse navbar-collapse d-block" id="navbarSupportedContent">
-        <ul class="navbar-nav">
-          <li class="i18n-dropdown dropdown nav-item mr-2" display="dynamic" ngbDropdown >
-            <a class="nav-link d-flex align-items-center dropdown-toggle dropdown-language" id="dropdown-flag"
-              href="javascript:;" data-toggle="dropdown" ngbDropdownToggle><img class="langimg selected-flag"
-                [src]="selectedLanguageFlag" alt="flag" /><span
-                class="selected-language d-md-flex d-none">{{selectedLanguageText}}</span></a>
-            <div ngbDropdownMenu class="dropdown-menu dropdown-menu-right text-left" aria-labelledby="dropdown-flag">
-              <a class="dropdown-item" href="javascript:;" data-language="en" (click)="ChangeLanguage('en')"><img
-                  class="langimg mr-2" src="./assets/img/flags/us.png" alt="flag" /><span
-                  class="font-small-3">English</span></a><a class="dropdown-item" href="javascript:;" data-language="es"
-                (click)="ChangeLanguage('es')"><img class="langimg mr-2" src="./assets/img/flags/es.png"
-                  alt="flag" /><span class="font-small-3">Spanish</span></a><a class="dropdown-item" href="javascript:;"
-                data-language="pt" (click)="ChangeLanguage('pt')"><img class="langimg mr-2"
-                  src="./assets/img/flags/pt.png" alt="flag" /><span class="font-small-3">Portuguese</span></a>
-              <a class="dropdown-item" href="javascript:;" data-language="de" (click)="ChangeLanguage('de')"><img
-                  class="langimg mr-2" src="./assets/img/flags/de.png" alt="flag" /><span
-                  class="font-small-3">German</span></a>
-            </div>
-          </li>
+        <ul class="navbar-nav" style="color: #fff !important">
           <li class="dropdown nav-item" placement="bottom-left" display="static" ngbDropdown >
             <a class="nav-link dropdown-toggle dropdown-notification p-0 mt-2" id="drp-notification" href="javascript:;"
               data-toggle="dropdown" ngbDropdownToggle><i class="ft-bell font-medium-3"></i><span
@@ -303,7 +285,7 @@
   </div>
   <ng-template #modalContent let-close="close">
     <div class="modal-header">
-      <h5 class="modal-title">{{ modalData?.action }}</h5>
+      <h5 class="modal-title">Change Password</h5>
       <button type="button" class="close" (click)="close()">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -339,11 +321,14 @@
           <div class="controls">
             <input type="password" formControlName="retypeNewPassword" class="form-control"
               placeholder="New Password"
-              [ngClass]="{ 'is-invalid': changePasswordFormSubmitted && cpf.retypeNewPassword.invalid, 'is-valid': changePasswordFormSubmitted && !cpf.retypeNewPassword.invalid }"
+              [ngClass]="{ 'is-invalid': changePasswordFormSubmitted && cpf.retypeNewPassword.invalid || changePasswordForm.hasError('notSame'), 'is-valid': changePasswordFormSubmitted && !cpf.retypeNewPassword.invalid && !changePasswordForm.hasError('notSame') }"
               required>
             <div
               *ngIf="changePasswordFormSubmitted && (cpf.retypeNewPassword.invalid || cpf.retypeNewPassword.errors?.required)"
               class="help-block mt-1 text-danger"> <i class="ft-alert-circle align-middle"></i> This is required
+            </div>
+            <div *ngIf="changePasswordForm.get('retypeNewPassword').touched && changePasswordForm.hasError('notSame')" class="help-block mt-1 text-danger">
+              <i class="ft-alert-circle align-middle"></i> Password do not match
             </div>
           </div>
         </div>

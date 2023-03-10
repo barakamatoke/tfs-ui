@@ -4,5 +4,10 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  //  apiUrl: 'http://localhost/ChemWebsite.API/',
+  apiUrl: 'https://localhost:5001/',
+  allowFileExtension:['pdf','doc','docx','xls','xlsx'],
+  allowExtesions: ['pdf', 'doc', 'docx'],
+  maximumFileSize: 104857600
 };

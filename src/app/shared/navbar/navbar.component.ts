@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LayoutService } from '../services/layout.service';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../services/config.service';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { LISTITEMS } from '../data/template-search';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
@@ -32,6 +32,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   layoutSub: Subscription;
   configSub: Subscription;
   currentUser: any;
+  changePasswordFormSubmitted: boolean;
 
   @ViewChild('search') searchElement: ElementRef;
   @ViewChildren('searchResults') searchResults: QueryList<any>;
@@ -54,6 +55,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     private toastrService: ToastrService,
     private authService: AuthService,
     private modal: NgbModal,
+    private fb: FormBuilder,
     private configService: ConfigService, private cdr: ChangeDetectorRef) {
 
     const browserLang: string = translate.getBrowserLang();
@@ -68,10 +70,13 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-  changePasswordForm = new UntypedFormGroup({
-    oldPassword: new UntypedFormControl('', [Validators.required]),
-    newPassword: new UntypedFormControl('', [Validators.required]),
-    retypeNewPassword: new UntypedFormControl('', [Validators.required])
+  changePasswordForm = this.fb.group({
+    email: [],
+    oldPassword: ['', [Validators.required]],
+    newPassword: ['', [Validators.required, Validators.minLength(6)]],
+    retypeNewPassword: ['', [Validators.required]],
+  }, {
+    validator: this.checkPasswords
   });
 
   ngOnInit() {
@@ -84,6 +89,16 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     else {
       this.isSmallScreen = false;
     }
+  }
+
+  get cpf() {
+    return this.changePasswordForm.controls;
+  }
+
+  checkPasswords(group: UntypedFormGroup) {
+    let pass = group.get('newPassword').value;
+    let confirmPass = group.get('retypeNewPassword').value;
+    return pass === confirmPass ? null : { notSame: true }
   }
 
   ngAfterViewInit() {
@@ -224,9 +239,6 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
       this.searchOpenClass = '';
     }
     this.seachTextEmpty.emit(true);
-
-
-
   }
 
   toggleNotificationSidebar() {
@@ -243,7 +255,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onChangePasswordFormSubmit() {
-   // this.changePasswordFormSubmitted = true;
+    this.changePasswordFormSubmitted = true;
     if (!this.changePasswordForm.invalid) {
       const data = this.changePasswordForm.value;
       const userData = {
@@ -251,10 +263,11 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         username: this.currentUser.email
       }
       this.authService.changePassword(userData).subscribe(d => {
-        this.toastrService.success('Password changed successfully')
+        this.toastrService.success('Password changed successfully');
+        this.modal.dismissAll();
         this.authService.logout();
       }, err => {
-        console.log("ESomething went wrong", err);
+        console.log("Something went wrong", err);
       })
     }
   }

@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -31,17 +30,7 @@ import { AuthService } from "./shared/auth/auth.service";
 import { AuthGuard } from "./shared/auth/auth-guard.service";
 import { WINDOW_PROVIDERS } from './shared/services/window.service';
 import { TestComponent } from './test/test.component';
-
-var firebaseConfig = {
-  apiKey: "AIzaSyC9XfnIpwNoSv7cyAsoccFQ5EYPd7lZXrk", //YOUR_API_KEY
-  authDomain: "apex-angular.firebaseapp.com", //YOUR_AUTH_DOMAIN
-  databaseURL: "https://apex-angular.firebaseio.com", //YOUR_DATABASE_URL
-  projectId: "apex-angular", //YOUR_PROJECT_ID
-  storageBucket: "apex-angular.appspot.com", //YOUR_STORAGE_BUCKET
-  messagingSenderId: "447277845463", //YOUR_MESSAGING_SENDER_ID
-  appId: "1:447277845463:web:9a7db7aaeaf3a7217a9992", //YOUR_APP_ID
-  measurementId: "G-ZVSYZRJ211" //YOUR_MEASUREMENT_ID
-};
+import { HttpInterceptorModule } from "./shared/auth/http-request-interceptor";
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -61,9 +50,9 @@ export function createTranslateLoader(http: HttpClient) {
     AppRoutingModule,
     SharedModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
     ToastrModule.forRoot(),
+    HttpInterceptorModule,
     NgbModule,
     NgxSpinnerModule,
     TranslateModule.forRoot({
