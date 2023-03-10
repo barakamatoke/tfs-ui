@@ -1,10 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgForm, UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthService } from 'app/shared/auth/auth.service';
 import { NgxSpinnerService } from "ngx-spinner";
-
-
 @Component({
   selector: 'app-login-page',
   templateUrl: './login.component.html',

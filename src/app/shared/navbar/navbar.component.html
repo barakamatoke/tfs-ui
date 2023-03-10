@@ -267,8 +267,8 @@
             <a class="nav-link dropdown-toggle user-dropdown d-flex align-items-end" id="dropdownBasic2"
               href="javascript:;" data-toggle="dropdown" ngbDropdownToggle>
               <div class="user d-md-flex d-none mr-2">
-                <span class="text-right">John Doe</span><span
-                  class="text-right text-muted font-small-3">Available</span>
+                <span class="text-right">{{ currentUser.firstName }} {{ currentUser.lastName }}</span><span
+                  class="text-right text-muted font-small-3">{{ currentUser.email }}</span>
               </div>
               <img class="avatar" src="assets/img/portrait/small/avatar-s-1.png" alt="avatar" height="35" width="35" />
             </a>
@@ -279,9 +279,9 @@
                   <i class="ft-message-square mr-2"></i><span>Chat</span>
                 </div>
               </a>
-              <a class="dropdown-item" routerLink="/auth/profile">
+              <a class="dropdown-item" (click)="changePassword()">
                 <div class="d-flex align-items-center">
-                  <i class="ft-edit mr-2"></i><span>Edit Profile</span>
+                  <i class="ft-edit mr-2"></i><span>Change Password</span>
                 </div>
               </a>
               <a class="dropdown-item" routerLink="/inbox">
@@ -290,7 +290,7 @@
                 </div>
               </a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" routerLink="/auth/login">
+              <a class="dropdown-item" (click)="logout()">
                 <div class="d-flex align-items-center">
                   <i class="ft-power mr-2"></i><span>Logout</span>
                 </div>
@@ -301,4 +301,59 @@
       </div>
     </div>
   </div>
+  <ng-template #modalContent let-close="close">
+    <div class="modal-header">
+      <h5 class="modal-title">{{ modalData?.action }}</h5>
+      <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="changePasswordForm">
+        <div class="form-group">
+          <label for="old-password">Old Password</label>
+          <div class="controls">
+            <input type="password" formControlName="oldPassword" class="form-control" placeholder="Old Password"
+              [ngClass]="{ 'is-invalid': changePasswordFormSubmitted && cpf.oldPassword.invalid, 'is-valid': changePasswordFormSubmitted && !cpf.oldPassword.invalid }"
+              required>
+            <div
+              *ngIf="changePasswordFormSubmitted && (cpf.oldPassword.invalid || cpf.oldPassword.errors?.required)"
+              class="help-block mt-1 text-danger"> <i class="ft-alert-circle align-middle"></i> This is required
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="new-password">New Password</label>
+          <div class="controls">
+            <input type="password" formControlName="newPassword" class="form-control" placeholder="New Password"
+              [ngClass]="{ 'is-invalid': changePasswordFormSubmitted && cpf.newPassword.invalid, 'is-valid': changePasswordFormSubmitted && !cpf.newPassword.invalid }"
+              required>
+            <div
+              *ngIf="changePasswordFormSubmitted && (cpf.newPassword.invalid || cpf.newPassword.errors?.required)"
+              class="help-block mt-1 text-danger"> <i class="ft-alert-circle align-middle"></i> This is required
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="retype-new-password">Retype New Password</label>
+          <div class="controls">
+            <input type="password" formControlName="retypeNewPassword" class="form-control"
+              placeholder="New Password"
+              [ngClass]="{ 'is-invalid': changePasswordFormSubmitted && cpf.retypeNewPassword.invalid, 'is-valid': changePasswordFormSubmitted && !cpf.retypeNewPassword.invalid }"
+              required>
+            <div
+              *ngIf="changePasswordFormSubmitted && (cpf.retypeNewPassword.invalid || cpf.retypeNewPassword.errors?.required)"
+              class="help-block mt-1 text-danger"> <i class="ft-alert-circle align-middle"></i> This is required
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div class="d-flex flex-sm-row flex-column justify-content-end">
+        <button (click)="onChangePasswordFormSubmit()" class="btn btn-primary mr-sm-2 mb-1">Save Changes</button>
+        <button (click)="close()" type="reset" class="btn btn-secondary mb-1">Cancel</button>
+      </div>
+    </div>
+  </ng-template>
 </nav>

@@ -77,19 +77,32 @@ export class AuthService {
       ).pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
+  logout(): void {
+    this.resetSecurityObject();
+  }
+
   resetSecurityObject(): void {
     localStorage.removeItem('authObj');
     localStorage.removeItem('bearerToken');
     this._securityObject$.next(null);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
-  logout() {
-    this._firebaseAuth.signOut();
-    this.router.navigate(['YOUR_LOGOUT_URL']);
+  changePassword(user: any): Observable<User | CommonError> {
+    const url = `https://localhost:5001/api/user/changepassword`;
+    return this.http.post<User>(url, user)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  isAuthenticated() {
-    return true;
+  isAuthenticated(): boolean {
+    const authStr = localStorage.getItem('authObj');
+    if (authStr)
+      return true;
+    else
+      return false;
+  }
+
+  currentUser(): any {
+    return localStorage.getItem('authObj');
   }
 }

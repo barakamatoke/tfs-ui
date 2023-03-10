@@ -1,11 +1,14 @@
-import { Component, Output, EventEmitter, OnDestroy, OnInit, AfterViewInit, ChangeDetectorRef, Inject, Renderer2, ViewChild, ElementRef, ViewChildren, QueryList, HostListener } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy, OnInit, AfterViewInit, ChangeDetectorRef, Inject, Renderer2, ViewChild, ElementRef, ViewChildren, QueryList, HostListener, TemplateRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LayoutService } from '../services/layout.service';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../services/config.service';
-import { UntypedFormControl } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { LISTITEMS } from '../data/template-search';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: "app-navbar",
@@ -28,9 +31,11 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   public isCollapsed = true;
   layoutSub: Subscription;
   configSub: Subscription;
+  currentUser: any;
 
   @ViewChild('search') searchElement: ElementRef;
   @ViewChildren('searchResults') searchResults: QueryList<any>;
+  @ViewChild('modalContent') modalContent: TemplateRef<any>;
 
   @Output()
   toggleHideSidebar = new EventEmitter<Object>();
@@ -46,6 +51,9 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(public translate: TranslateService,
     private layoutService: LayoutService,
     private router: Router,
+    private toastrService: ToastrService,
+    private authService: AuthService,
+    private modal: NgbModal,
     private configService: ConfigService, private cdr: ChangeDetectorRef) {
 
     const browserLang: string = translate.getBrowserLang();
@@ -60,7 +68,14 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  changePasswordForm = new UntypedFormGroup({
+    oldPassword: new UntypedFormControl('', [Validators.required]),
+    newPassword: new UntypedFormControl('', [Validators.required]),
+    retypeNewPassword: new UntypedFormControl('', [Validators.required])
+  });
+
   ngOnInit() {
+    this.currentUser = this.authService.currentUser();
     this.listItems = LISTITEMS;
 
     if (this.innerWidth < 1200) {
@@ -214,13 +229,37 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-
-
   toggleNotificationSidebar() {
     this.layoutService.toggleNotificationSidebar(true);
   }
 
   toggleSidebar() {
     this.layoutService.toggleSidebarSmallScreen(this.hideSidebar);
+  }
+
+  changePassword() {
+     // this.modalData = {};
+      this.modal.open(this.modalContent, { size: 'md' });
+  }
+
+  onChangePasswordFormSubmit() {
+   // this.changePasswordFormSubmitted = true;
+    if (!this.changePasswordForm.invalid) {
+      const data = this.changePasswordForm.value;
+      const userData = {
+        ...data,
+        username: this.currentUser.email
+      }
+      this.authService.changePassword(userData).subscribe(d => {
+        this.toastrService.success('Password changed successfully')
+        this.authService.logout();
+      }, err => {
+        console.log("ESomething went wrong", err);
+      })
+    }
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
